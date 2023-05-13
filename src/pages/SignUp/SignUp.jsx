@@ -1,19 +1,23 @@
 import NavBar from "../Shared/NavBar/NavBar";
 import img from '../../assets/images/login/login.svg'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../Providers/AuthProvider";
+import SocialLogin from "../Shared/SocialLogin/SocialLogin";
 
 
 const SignUp = () => {
-    const {createUser} = useContext(AuthContext)
+    const {createUser} = useContext(AuthContext);
+    const navigate = useNavigate()
+
+    const from = location.state?.from?.pathname || '/';
 
 
     const handleSignUp = event =>{
         event.preventDefault();
 
         const form = event.target;
-        const name = form.name.value;
+        // const name = form.name.value;
         const email = form.email.value;
         const password = form.password.value;
 
@@ -21,6 +25,7 @@ const SignUp = () => {
         .then(result=>{
             const user = result.user;
             console.log(user);
+            navigate(from, { replace: true })
         })
         .catch(error=> console.log(error.message))
 
@@ -58,15 +63,14 @@ const SignUp = () => {
                                     </label>
                                     <input type="text" name="password"
                                         placeholder="password" className="input input-bordered" />
-                                    <label className="label">
-                                        <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
-                                    </label>
                                 </div>
                                 <div className="form-control mt-6">
                                     <input type="submit" value="Sign Up" className="btn btn-primary" />
                                 </div>
                             </form>
                             <p className="text-lg text-gray-500 font-semibold text-center my-4">Already have an account? <Link to={'/login'} className="text-orange-600">Login</Link></p>
+
+                            <SocialLogin></SocialLogin>
                         </div>
                     </div>
                 </div>

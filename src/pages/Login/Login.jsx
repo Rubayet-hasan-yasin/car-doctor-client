@@ -1,15 +1,20 @@
 import NavBar from "../Shared/NavBar/NavBar";
 import img from '../../assets/images/login/login.svg'
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../Providers/AuthProvider";
+import SocialLogin from "../Shared/SocialLogin/SocialLogin";
 
 const Login = () => {
 
-    const {signIn} = useContext(AuthContext)
+    const { signIn } = useContext(AuthContext);
+    const location = useLocation();
+    const navigate = useNavigate()
+
+    const from = location.state?.from?.pathname || '/';
 
 
-    const handleLogin = event =>{
+    const handleLogin = event => {
         event.preventDefault();
 
 
@@ -19,13 +24,15 @@ const Login = () => {
 
 
         signIn(email, password)
-        .then(result=>{
-            const user = result.user;
-            console.log(user);
-        })
-        .catch(error=>{
-            console.log(error.message);
-        })
+            .then(result => {
+                const user = result.user;
+                console.log(user);
+                navigate(from, { replace: true })
+
+            })
+            .catch(error => {
+                console.log(error.message);
+            })
 
 
     }
@@ -53,7 +60,7 @@ const Login = () => {
                                         <span className="label-text">Password</span>
                                     </label>
                                     <input type="text" name="password"
-                                   placeholder="password" className="input input-bordered" />
+                                        placeholder="password" className="input input-bordered" />
                                     <label className="label">
                                         <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
                                     </label>
@@ -63,6 +70,8 @@ const Login = () => {
                                 </div>
                             </form>
                             <p className="text-lg text-gray-500 font-semibold text-center my-4">New to car Doctors? <Link to={'/signup'} className="text-orange-600">Sign Up</Link></p>
+
+                            <SocialLogin></SocialLogin>
                         </div>
                     </div>
                 </div>
